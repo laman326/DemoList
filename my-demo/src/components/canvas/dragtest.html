@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="LF" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title></title>
+  </head>
+  <body>
+    <div
+      id="root"
+      style="width: 900px;height: 600px; background-color: burlywood;position: relative;"
+    >
+      <!-- 分隔条 -->
+      <div
+        id="line"
+        style="position:absolute;width:0px;height: 600px; border:10px solid red"
+      ></div>
+    </div>
+    <script>
+      window.onload = function() {
+        var line = document.getElementById("line");
+
+        // var lineY = 0;
+        // var mouseX=0 ;
+        (line.onmousedown = function(evt) {
+          var lineX = Number(line.style.left.slice(0, -2));
+          var mouseX = evt.clientX;
+          console.log("lineX", lineX, typeof lineX);
+          console.log("mouseX", mouseX);
+          document.onmousemove = function(evt) {
+            console.log("evt.clientX", evt.clientX);
+            var changeX = evt.clientX - mouseX;
+            var newLineX = lineX + changeX;
+            if (newLineX < 0) {
+              newLineX = 0;
+            }
+            if (newLineX > 890) {
+              newLineX = 890;
+            }
+
+            console.log("newLineX", newLineX);
+            line.style.left = newLineX + "px";
+          };
+          (document.onmouseup = function(evt) {
+            //   console.log('------------')
+            document.onmousemove = null;
+            document.onmouseup = null;
+          });
+        })
+      }
+    </script>
+  </body>
+</html>
