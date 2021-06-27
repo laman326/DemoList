@@ -119,13 +119,21 @@
 
         if (event.deltaY > 40) {
           //鼠标滚轮放大
-        //   imgScale *= 2;
-        //   imgX = imgX * 2 - x;
-        //   imgY = imgY * 2 - y;
-        //   img2X = img2X * 2 - x;
-        //   img2Y = img2Y * 2 - y;
-        canvas.cssText="zoom=1"
+          imgScale *= 2;
+          imgX = imgX *2 - x;
+          imgY = imgY *2 - y;
+          img2X = img2X * 2 - x;
+          img2Y = img2Y *2 - y;
+        // cs.scale(2,2)
+        // // imgScale *= 2;
+
+        //   imgX = imgX /2 ;
+        //   imgY = imgY / 2 ;
+        //   img2X = img2X /2;
+        //   img2Y = img2Y /2 ;
+        // canvas.cssText="zoom=1"
         } else {
+          // cs.scale(0.5,0.5)
             console.log(`----------------------`);
           //鼠标滚轮缩小
           imgScale *= 0.5;
@@ -147,13 +155,13 @@
       //windowToCanvas此方法用于鼠标所在点的坐标切换到画布上的坐标
       function windowToCanvas(canvas, x, y) {
         var bbox = canvas.getBoundingClientRect(); //getBoundingClientRect获取元素相对于视窗的位置集合
-        // console.log('bbox.left',bbox.left);
-        // console.log('bbox.top',bbox.top);
-        // console.log('bbox.right',bbox.right);
-        // console.log('bbox.bottom',bbox.bottom);
-        // console.log("bbox.width", bbox.width);
-        // console.log("canvas.height", canvas.width);
-        // console.log("bbox", bbox);
+        console.log('bbox.left',bbox.left);
+        console.log('bbox.top',bbox.top);
+        console.log('bbox.right',bbox.right);
+        console.log('bbox.bottom',bbox.bottom);
+        console.log("bbox.width", bbox.width);
+        console.log("canvas.height", canvas.width);
+        console.log("bbox", bbox);
         return {
           x: x - bbox.left - (bbox.width - canvas.width) / 2,
           y: y - bbox.top - (bbox.height - canvas.height) / 2

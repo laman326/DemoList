@@ -46,13 +46,13 @@
 
           console.log("newLineX", newLineX);
           line.style.left = newLineX + "px";
-          var newLinePosition=windowToCanvas(canvas,evt.clientX,evt.clientY);
+          // var newLinePosition=windowToCanvas(canvas,evt.clientX,evt.clientY);
           console.log(`----------------------`);
-          console.log('newLinePosition',newLinePosition);
-               imgX += newLinePosition.x;
-            imgY += newLinePosition.y;
-            img2X += newLinePosition.x;
-            img2Y += newLinePosition.y;
+          // console.log('newLinePosition',newLinePosition);
+            //    imgX += newLinePosition.x;
+            // imgY += newLinePosition.y;
+            // img2X += newLinePosition.x;
+            // img2Y += newLinePosition.y;
           drawImage();
         };
         document.onmouseup = function(evt) {
@@ -165,15 +165,15 @@
           imgScale *= 2;
           imgX = imgX * 2 - x;
           imgY = imgY * 2 - y;
-          img2X = img2X * 2 - x;
-          img2Y = img2Y * 2 - y;
+          // img2X = img2X * 2 - x;
+          // img2Y = img2Y * 2 - y;
         } else {
           //鼠标滚轮缩小
           imgScale *= 0.5;
           imgX = imgX * 0.5 + x * 0.5;
           imgY = imgY * 0.5 + y * 0.5;
-          img2X = img2X * 0.5 + x * 0.5;
-          img2Y = img2Y * 0.5 + y * 0.5;
+          // img2X = img2X * 0.5 + x * 0.5;
+          // img2Y = img2Y * 0.5 + y * 0.5;
 
           //禁止缩放留白
           // if (imgScale < 1) {
@@ -212,28 +212,30 @@
           image.width * imgScale,//width
           image.height * imgScale//height
         );
-        cs.drawImage(
-          image2,
-          img2X,//x
-          img2Y,//y
-          image2.width * imgScale,//width
-          image2.height * imgScale//height
-        );
         // cs.drawImage(
         //   image2,
-        //   img2X,//sx开始裁剪的位置
-        //   img2Y,//sy
-        //   leftDis/imgScale,//swidth裁剪的宽度
-        //   image2.height/imgScale,//sheight裁剪的高度
-        //   // 0,
-        //   // 0,yjk
-
-        //   img2X,//x画布上的x坐标
-        //   img2Y,//Y
-        //   leftDis,//width要使用的图像宽度
-        //   // image2.width * imgScale,
-        //   image2.height,//height要使用的图像高度
+        //   img2X,//x
+        //   img2Y,//y
+        //   image2.width * imgScale,//width
+        //   image2.height * imgScale//height
         // );
+        console.log('img2X:',img2X/imgScale)
+        console.log('')
+        cs.drawImage(
+          image2,
+          img2X/imgScale,//sx开始裁剪的位置
+          img2Y/imgScale,//sy
+          100/imgScale,//swidth裁剪的宽度
+          image2.height/imgScale,//sheight裁剪的高度
+          // 0,
+          // 0,yjk
+
+          imgX,//x画布上的x坐标
+          imgY,//Y
+          100,//width要使用的图像宽度
+          // image2.width * imgScale,
+          image2.height,//height要使用的图像高度
+        );
       }
 
       // 不需要这些
