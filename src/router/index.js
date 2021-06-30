@@ -4,7 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import mall from '@/components/mall'
 import shoppingcart from '@/components/shoppingcart'
 import home from '@/components/index'
-import canvasDemo from "@/components/canvasDemo";
+import canvasDemo from "../components/canvasDemo/canvasDemo.vue";
 
 Vue.use(Router)
 

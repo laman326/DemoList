@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>菜鸟教程(runoob.com)</title>
+  </head>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="600"
+      height="340"
+      style="border:1px solid #d3d3d3;"
+    >
+      您的浏览器不支持 HTML5 canvas 标签。
+    </canvas>
+    <script>
+      var c = document.getElementById("myCanvas");
+      var ctx = c.getContext("2d");
+      ctx.strokeRect(5, 5, 25, 15);
+
+      ctx.scale(2, 2);  
+      ctx.strokeStyle="#FF0000";
+      ctx.strokeRect(5, 5, 25, 15);
+
+      ctx.scale(-2, -2);
+    
+
+      ctx.strokeRect(5, 5, 25, 15);
+         //windowToCanvas此方法用于鼠标所在点的坐标切换到画布上的坐标
+      function windowToCanvas(canvas, x, y) {
+        var bbox = canvas.getBoundingClientRect(); //getBoundingClientRect获取元素相对于视窗的位置集合
+        return {
+          x: x - bbox.left - (bbox.width - canvas.width) / 2,
+          y: y - bbox.top - (bbox.height - canvas.height) / 2
+        };
+      }
+      
+
+    //   ctx.scale(3, 3);
+    //   ctx.strokeRect(5, 5, 25, 15);
+      c.onmousemove = function(event) {
+          var newPosition=windowToCanvas(c,event.clientX,event.clientY)
+          console.log('x:',newPosition.x,'y:',newPosition.y)
+      };
+    </script>
+  </body>
+</html>
