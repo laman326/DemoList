@@ -38,6 +38,7 @@ export default {
       line2: null, //横线
       image1: null,
       image2: null,
+      canvasPosition:{},//canvas的位置,因为canvas可能距离左上角的距离不是0
       // lineX: 0, //线的实时位置
       // lineY: 0,
       mouseLocation: {}, //鼠标位置
@@ -89,14 +90,14 @@ export default {
     },
     init() {
       this.canvas = document.getElementById("canvas");
-      this.cs = canvas.getContext("2d");
+      this.cs = this.canvas.getContext("2d");
 
-      let bbox = canvas.getBoundingClientRect(); //canvas可能距离左上角的距离不是0
+      this.canvasPosition = this.canvas.getBoundingClientRect(); //canvas可能距离左上角的距离不是0
       //使得线的初始位置居中
       this.leftDis = this.canvas.width / 2;
-      this.line1.style.left = this.canvas.width / 2 + bbox.left + "px";
-      this.topDis = this.canvas.height / 2 + bbox.top;
-      this.line2.style.top = this.canvas.height / 2 + bbox.top + "px";
+      this.line1.style.left = this.canvas.width / 2 + this.canvasPosition.left + "px";
+      this.topDis = this.canvas.height / 2 + this.canvasPosition.top;
+      this.line2.style.top = this.canvas.height / 2 + this.canvasPosition.top + "px";
 
       this.image1 = new Image();
       this.image2 = new Image();
@@ -191,12 +192,11 @@ export default {
     },
     //限制线的出界范围
     limitLine() {
-      let bbox = canvas.getBoundingClientRect(); //canvas可能距离左上角的距离不是0
       let left = this.imagePosition.x;
       let right = this.imagePosition.x + this.initWidth * this.imgScale;
-      let top = this.imagePosition.y + bbox.top;
+      let top = this.imagePosition.y + this.canvasPosition.top;
       let bottom =
-        this.imagePosition.y + bbox.top + this.initHeight * this.imgScale;
+        this.imagePosition.y + this.canvasPosition.top + this.initHeight * this.imgScale;
       //如果是横线对比则返回上下，竖线对比则返回左右范围
       let min, max;
       if (this.flag) {
@@ -228,10 +228,10 @@ export default {
       this.drawImage();
     },
     zoom(mousex, mousey, delta) {
-      if (this.flag) {
-        mousey = this.topDis;
+      if (this.flag) {      
+        mousey = this.topDis-this.canvasPosition.top; 
       } else {
-        mousex = this.leftDis;
+        mousex = this.leftDis-this.canvasPosition.left;
       }
 
       let factor = 1 + 0.1 * delta;
@@ -299,11 +299,9 @@ export default {
 
     //windowToCanvas此方法用于鼠标所在点的坐标切换到画布上的坐标
     windowToCanvas(canvas, x, y) {
-      var bbox = canvas.getBoundingClientRect(); //getBoundingClientRect获取元素相对于视窗的位置集合
-      // console.log("bbox", bbox);
       return {
-        x: x - bbox.left - (bbox.width - canvas.width) / 2,
-        y: y - bbox.top - (bbox.height - canvas.height) / 2
+        x: x - this.canvasPosition.left ,
+        y: y - this.canvasPosition.top 
       };
     },
     // 判断是否在画布范围内
@@ -359,10 +357,8 @@ export default {
         // cutHeight=this.image2.height;
         console.log("this.topDis", this.topDis);
         console.log("this.imagePosition.y", this.imagePosition.y);
-        let bbox = canvas.getBoundingClientRect(); //canvas可能距离左上角的距离不是0
-        console.log("bbox", bbox);
         let scale =
-          (this.topDis - this.imagePosition.y - bbox.top) /
+          (this.topDis - this.imagePosition.y - this.canvasPosition.top) /
           (this.initHeight * this.imgScale);
         console.log("scale", scale);
         cutHeight = scale * this.image2.height;
