@@ -62,7 +62,6 @@ export default {
       const ch = canvas.height;
       const iw = image.width;
       const ih = image.height;
-
       const canvasRadio = cw / ch;
       const imageRadio = iw / ih;
       let x = 0;
