@@ -8,8 +8,9 @@ import router from './router'
 import{Button} from 'element-ui'
 import axios from 'axios'
 import store from '../src/store/index'
-// import Vuex from 'vuex'
 
+
+// import Vuex from 'vuex'
 // Vue.use(Vuex)
 
 

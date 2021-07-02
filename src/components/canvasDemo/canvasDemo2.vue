@@ -1,20 +1,20 @@
 <template>
   <div>
-    <el-button @click="changeDirection">切换对比方向</el-button>
-    <div style="posotion:relative; width: 1000px;height: 650px;">
+    <!-- <el-button @click="changeDirection">切换对比方向</el-button> -->
+    <div
+      style="background-color:rgba(43, 189, 226, 0.877); position: relative;"
+    >
       <canvas
         id="canvas"
-        width="800"
-        height="600"
-        style="position: absolute;left:0px;background-color:white ;border:1px solid black"
+        style="position: absolute; top: 0; left:0; bottom: 0; right: 0; margin: auto;"
       ></canvas>
-      <div
+      <!-- <div
         id="line1"
-        style=" position:absolute;left:0px;width:0px;height: 600px; border:1px solid red;background-color: red;"
-      ></div>
+        style=" position:absolute;left:0;width:0px;height: 900px; border:2px solid red;background-color: red;"
+      ></div> -->
       <div
         id="line2"
-        style=" position:absolute;top:0;left:0;width:1300px;height: 0px; border:2px solid red;background-color: red; display:none"
+        style=" position:absolute;top:0;left:0;width:1300px;height: 0px; border:2px solid red;background-color: red;"
       ></div>
     </div>
   </div>
@@ -27,8 +27,11 @@ export default {
     return {
       newLineX: 0,
       leftDis: 0,
+      topDis:0,
       lineLeft: 0, //线不出界的范围
-      lineRight: 800,
+      lineRight: 1280,
+      lineTop:0,
+      lineBottom:853,
       imgX: 0,
       imgY: 0,
       isMouseDown: false,
@@ -47,45 +50,18 @@ export default {
       mouseDownLocation: {},
       newMouseLocation: {},
       flag: false, //判断是竖线对比还是横线对比，竖线为false
-      factor: 1, //单次缩放系数
-      imgh: 0,
-      imgw: 0,
-      scaleRatio:1, //宽度被压缩的比例
+      factor: 1 //单次缩放系数
     };
   },
   mounted() {
     this.line1 = document.getElementById("line1");
     this.line2 = document.getElementById("line2");
-    this.line = this.line1;
+    this.line = this.line2;
     this.init();
   },
   methods: {
-    getImageInitPos(canvas, image) {
-      let canvasRadio = canvas.width / canvas.height;
-      let imageRadio = image.width / image.height;
-      console.log('imageRadio',imageRadio);
-      this.imgh = canvas.height;
-      this.imgw = canvas.width;
-      console.log('canvas.width',canvas.width);
-      if (canvasRadio > imageRadio) {
-        //比较高，所以高占100%,宽居中
-        this.imgw = canvas.height * imageRadio;
-        this.imgX = (canvas.width - this.imgw) / 2;
-      } else {
-        //比较宽，所以宽占100%,高居中
-        this.imgh = canvas.width / imageRadio;
-        this.imgY = (canvas.height - this.imgh) / 2;
-        this.scaleRatio=image.width/canvas.width;
-      }
-      console.log("this.imgX", this.imgX);
-      console.log("this.imgY", this.imgY);
-      console.log("this.imgh", this.imgh);
-      console.log("this.imgw", this.imgw);
-      this.drawImage();
-    },
     init() {
-      this.canvas = document.getElementById("canvas");
-
+      this.canvas = document.getElementById("canvas"); //获取画布
       this.cs = canvas.getContext("2d");
       this.image1 = new Image();
       this.image2 = new Image();
@@ -93,9 +69,8 @@ export default {
       console.log("this.line", this.line);
 
       this.image1.onload = () => {
-
-        this.getImageInitPos(this.canvas, this.image1);
-
+        this.canvas.width = this.image1.width;
+        this.canvas.height = this.image1.height;
         this.drawImage();
       };
       this.image1.src = "../../static/flower.jpg";
@@ -105,7 +80,6 @@ export default {
       };
       this.image2.src = "../../static/营业.jpg";
 
-    
       this.line.addEventListener(
         "mousedown",
         evt => {
@@ -195,43 +169,65 @@ export default {
       );
       console.log("newMouseLocation", newMouseLocation);
       console.log("this.leftDis", this.leftDis);
-      var x = this.leftDis;
+    //   var x = this.leftDis;
 
-      // var x = newMouseLocation.x; //x是鼠标相对于画布的横坐标
-      var y = newMouseLocation.y; //y是纵坐标
+      var x = newMouseLocation.x; //x是鼠标相对于画布的横坐标
+      var y=this.topDis;
+    //   var y = newMouseLocation.y; //y是纵坐标
       // var y=leftDis;
-      var delta = evt.wheelDelta / 120;
-      console.log("delta", delta);
-      this.factor = 1 + 0.1 * delta;
+      var delta = evt.wheelDelta
+        ? evt.wheelDelta / 80
+        : evt.detail
+        ? -evt.detail
+        : 0;
+      this.cs.translate(x,y)
+      this.factor = Math.pow(1.1, delta);
       this.imgScale *= this.factor;
+      this.cs.scale(this.factor, this.factor);
 
-      this.imgX = x - (x - this.imgX) * this.factor;
-      this.imgY = y - (y - this.imgY) * this.factor;
-      this.imgh = this.imgh * this.factor;
-      this.imgw = this.imgw * this.factor;
-      console.log('this.imgX',this.imgX);
-      this.lineLeft = this.imgX;
-      this.lineRight = this.imgX + this.image1.width/this.scaleRatio * this.imgScale;
+      this.cs.translate(-x, -y);
       this.drawImage();
+
+      var bbox = this.canvas.getBoundingClientRect(); //getBoundingClientRect获取元素相对于视窗的位置集合
+      console.log("bbox", bbox);
+
+    //   if (event.deltaY > 0) {
+    //     //鼠标滚轮放大
+    //     this.imgScale *= 2;
+    //     this.imgX = this.imgX * 2 - x;
+    //     this.imgY = this.imgY * 2 - y;
+    //     this.lineLeft = this.imgX;
+    //     this.lineRight = this.imgX + this.image1.width ;
+    //   } else {
+    //     //鼠标滚轮缩小
+    //     this.imgScale *= 0.5;
+    //     this.imgX = this.imgX * 0.5 + x * 0.5;
+    //     this.imgY = this.imgY * 0.5 + y * 0.5;
+    //     this.lineLeft = this.imgX;
+    //     this.lineRight = this.imgX + this.image1.width * this.imgScale;
+    //   }
+    //   this.drawImage();
     },
 
     //竖线移动事件
     handleLineDown(evt) {
       console.log(`----------进来------------`);
-      this.lineX = Number(this.line.style.left.slice(0, -2));
 
-      var mouseX = evt.clientX;
+      this.lineY = Number(this.line.style.top.slice(0, -2));
+
+      var mouseY = evt.clientY;
       document.onmousemove = evt => {
-        var changeX = evt.clientX - mouseX;
-        this.newLineX = this.lineX + changeX;
-        if (this.newLineX < this.lineLeft) {
-          this.newLineX = this.lineLeft;
+        var changeY = evt.clientY - mouseY;
+        this.newLineY = this.lineY + changeY;
+
+        if (this.newLineY < this.lineTop) {
+          this.newLineY = this.lineTop;
         }
-        if (this.newLineX > this.lineRight) {
-          this.newLineX = this.lineRight;
+        if (this.newLineY > this.lineBottom) {
+          this.newLineY = this.lineBottom;
         }
-        this.leftDis = this.newLineX;
-        this.line.style.left = this.newLineX + "px";
+        this.topDis = this.newLineY;
+        this.line.style.top = this.newLineY + "px";
         this.drawImage();
       };
       document.onmouseup = function(evt) {
@@ -258,43 +254,41 @@ export default {
     },
     //画图
     drawImage() {
-      console.log(`----------来画图了吗------------`);
       console.log("this.imgX,this.imgY", this.imgX, this.imgY);
-      console.log('this.imgw,this.imgh',this.imgw,this.imgh);
-      this.cs.clearRect(0, 0, canvas.width * 2, canvas.height * 2); //在给定的矩形内清除指定的像素
+      // this.cs.clearRect(0, 0, canvas.width * 2, canvas.height * 2); //在给定的矩形内清除指定的像素
+
+      // 保存当前渲染上下文所进行的变换
+      this.cs.save();
+
+      // 重置渲染上下文并清空画布
+      this.cs.setTransform(1, 0, 0, 1, 0, 0);
+      this.cs.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 恢复先前渲染上下文所进行的变换
+      this.cs.restore();
 
       this.cs.drawImage(
         this.image1,
         this.imgX, //x
         this.imgY, //y
-        this.imgw, //width
-        this.imgh //height
+        this.image1.width, //width
+        this.image1.height //height
       );
-      console.log('this.imgw',this.imgw);
-  
-      console.log('this.imgw/this.imgh',this.imgw/this.imgh);
-      console.log('this.leftDis',this.leftDis);
-      console.log('this.imgX',this.imgX);
-      console.log('this.canvas.width',this.canvas.width);
-      console.log('this.imgScale',this.imgScale);
       var drawLeft =
-        ((this.leftDis - this.imgX) / (this.canvas.width * this.imgScale)) *
-        this.image2.width; //计算当前分割线相对于image的比例，并计算出相对于画布的宽度。
-      console.log('drawLeft',drawLeft);
-      console.log('this.imgh',this.imgh);
-
+        ((this.leftDis / this.imgScale - this.imgX) / (this.image2.width*this.imgScale)) *
+        this.canvas.width; //计算当前分割线相对于image的比例，并计算出相对于画布的宽度。
       this.cs.drawImage(
         this.image2,
         0, //sx开始裁剪的位置
         0, //sy
-        drawLeft, //swidth裁剪的宽度
-        this.image2.height, //sheight裁剪的高度
+        this.image2.width, //swidth裁剪的宽度
+        this.topDis, //sheight裁剪的高度
         this.imgX, //x画布上的x坐标
         this.imgY, //Y
-        drawLeft/this.scaleRatio*this.imgScale, //width要使用的图像宽度
-        this.imgh //height要使用的图像高度
+        this.image2.width, //width要使用的图像宽度
+        // image2.width * imgScale,
+        this.topDis //height要使用的图像高度
       );
-
     },
     //切换对比方向
     changeDirection() {
