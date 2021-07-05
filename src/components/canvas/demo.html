@@ -18,34 +18,51 @@
       ></canvas>
       <div
         id="line"
-        style=" position:absolute;width:0px;height: 900px; border:5px solid red"
+        style=" position:absolute;width:0px;height: 900px; border:2px solid red;background-color: red;"
       ></div>
+      <!-- <div
+        id="line2"
+        style=" position:absolute;width:1300px;height: 0px; border:2px solid red;background-color: red;"
+      ></div>
+      <button @click>切换对比方向</button> -->
     </div>
     <script>
       var line = document.getElementById("line");
-      var leftDis;
+      var line2 = document.getElementById("line2");
+
+      function clickButton() {
+        if (!flag) {
+          line.style.display = "none";
+        }
+      }
+
+      var newLineX = 0;
+      var leftDis = 0;
+      var lineLeft = 0;
+      var lineRight = 1280;
       console.log("line", line);
-      // var mouseX=0 ;
       line.onmousedown = function(evt) {
+        // var lineLe=newLineX-3
+        // line.style.left=lineLe+'px';
+        // line.style.width='6px';
         console.log(`----------进来------------`);
         var lineX = Number(line.style.left.slice(0, -2));
         var mouseX = evt.clientX;
-        console.log("lineX", lineX, typeof lineX);
-        console.log("mouseX", mouseX);
         document.onmousemove = function(evt) {
           console.log("evt.clientX", evt.clientX);
           var changeX = evt.clientX - mouseX;
-          var newLineX = lineX + changeX;
-          if (newLineX < 0) {
-            newLineX = 0;
+          newLineX = lineX + changeX;
+          if (newLineX < lineLeft) {
+            newLineX = lineLeft;
           }
-          if (newLineX > 1280) {
-            newLineX = 1280;
+          if (newLineX > lineRight) {
+            newLineX = lineRight;
           }
-          leftDis=newLineX;
+          leftDis = newLineX;
 
           console.log("newLineX", newLineX);
           line.style.left = newLineX + "px";
+<<<<<<< HEAD:my-demo/src/components/canvas/demo.html
           // var newLinePosition=windowToCanvas(canvas,evt.clientX,evt.clientY);
           console.log(`----------------------`);
           // console.log('newLinePosition',newLinePosition);
@@ -53,9 +70,12 @@
             // imgY += newLinePosition.y;
             // img2X += newLinePosition.x;
             // img2Y += newLinePosition.y;
+=======
+>>>>>>> 002a6027d7c445435e2291839fea56a69525b5d5:src/components/canvas/demo.html
           drawImage();
         };
         document.onmouseup = function(evt) {
+          // line.style.width='0px'
           //   console.log('------------')
           document.onmousemove = null;
           document.onmouseup = null;
@@ -64,8 +84,6 @@
 
       var imgX = 0; //画布X轴坐标
       var imgY = 0; //画布Y轴坐标
-      var img2X = 0; //画布X轴坐标
-      var img2Y = 0; //画布Y轴坐标
       var isMouseDown = false;
       var canvas = document.getElementById("canvas"); //获取画布
       var cs = canvas.getContext("2d");
@@ -74,14 +92,13 @@
       var image2 = new Image();
 
       var imgScale = 1; //当前放大倍数
-      image.src = "../../../src/assets/flower.jpg";
+      image.src = "../../../static/flower.jpg";
       image.onload = function() {
         canvas.width = image.width; //定位canvas宽度
         canvas.height = image.height; //定位canvas高度
         drawImage();
-        // cs.drawImage(image, 0, 0, 450, 210);
       };
-      image2.src = "../../assets/营业.jpg";
+      image2.src = "../../../static/营业.jpg";
       image2.onload = function() {
         drawImage();
       };
@@ -102,9 +119,6 @@
           event.clientY
         );
         isMouseDown = true;
-        // if (isPointInImageArea(mouseDownLocation)) {
-        //   isMouseDown = true;
-        // }
       };
       //鼠标弹起
       document.body.onmouseup = function() {
@@ -127,20 +141,13 @@
             mouseDownLocation = newMouseLocation; //把最新的位置赋值给鼠标按下时的位置
             imgX += x;
             imgY += y;
-            img2X += x;
-            img2Y += y;
+            lineLeft = imgX;
+            lineRight = imgX + image.width * imgScale;
           } else {
             //鼠标移动至画布范围外，置鼠标弹起
             canvas.style.cursor = "default";
             isMouseDown = false;
           }
-
-          // //限制图片拖动留白
-          // if (imgScale * image.width <= canvas.width) {
-          //   (imgX = 0), (imgY = 0);
-          // } else {
-          //   preventNull();
-          // }
           drawImage();
         }
       };
@@ -155,23 +162,41 @@
       function handleScroll(evt) {
         // console.log("evt", evt);
         var newMouseLocation = windowToCanvas(canvas, evt.clientX, evt.clientY);
-        // console.log("newMouseLocation", newMouseLocation);
-        var x = newMouseLocation.x; //x是鼠标相对于画布的横坐标
+        console.log("newMouseLocation", newMouseLocation);
+        var x = leftDis;
+        // var x = newMouseLocation.x; //x是鼠标相对于画布的横坐标
         var y = newMouseLocation.y; //y是纵坐标
-        console.log('event.deltaY',event.deltaY);
+        // var y=leftDis;
+        console.log("x", newMouseLocation.x);
+        console.log("y", y);
+        console.log("leftDis", leftDis);
+
+        console.log("event.deltaY", event.deltaY);
+        var delta = evt.wheelDelta
+          ? evt.wheelDelta / 80
+          : evt.detail
+          ? -evt.detail
+          : 0;
+        var factor = Math.pow(1.1, delta); //缩放比例，1.1^clicks
 
         if (event.deltaY > 40) {
           //鼠标滚轮放大
           imgScale *= 2;
           imgX = imgX * 2 - x;
           imgY = imgY * 2 - y;
+<<<<<<< HEAD:my-demo/src/components/canvas/demo.html
           // img2X = img2X * 2 - x;
           // img2Y = img2Y * 2 - y;
+=======
+          lineLeft = imgX;
+          lineRight = imgX + image.width * imgScale;
+>>>>>>> 002a6027d7c445435e2291839fea56a69525b5d5:src/components/canvas/demo.html
         } else {
           //鼠标滚轮缩小
           imgScale *= 0.5;
           imgX = imgX * 0.5 + x * 0.5;
           imgY = imgY * 0.5 + y * 0.5;
+<<<<<<< HEAD:my-demo/src/components/canvas/demo.html
           // img2X = img2X * 0.5 + x * 0.5;
           // img2Y = img2Y * 0.5 + y * 0.5;
 
@@ -182,36 +207,36 @@
           //   imgY = 0;
           // }
           // preventNull(); //防止容器留白
+=======
+          lineLeft = imgX;
+          lineRight = imgX + image.width * imgScale;
+>>>>>>> 002a6027d7c445435e2291839fea56a69525b5d5:src/components/canvas/demo.html
         }
         drawImage();
       }
       //windowToCanvas此方法用于鼠标所在点的坐标切换到画布上的坐标
       function windowToCanvas(canvas, x, y) {
         var bbox = canvas.getBoundingClientRect(); //getBoundingClientRect获取元素相对于视窗的位置集合
-        // console.log('bbox.left',bbox.left);
-        // console.log('bbox.top',bbox.top);
-        // console.log('bbox.right',bbox.right);
-        // console.log('bbox.bottom',bbox.bottom);
-        // console.log("bbox.width", bbox.width);
-        // console.log("canvas.height", canvas.width);
-        // console.log("bbox", bbox);
+        console.log("bbox", bbox);
         return {
           x: x - bbox.left - (bbox.width - canvas.width) / 2,
           y: y - bbox.top - (bbox.height - canvas.height) / 2
         };
       }
       //图片转换canvas渲染
-      function drawImage() {
+      function drawImage(flag) {
         console.log("imgX,imgY", imgX, imgY);
         console.log(`----------画图------------`);
-        cs.clearRect(0, 0, canvas.width * 2, canvas.height * 2);
+        console.log("imgScale", imgScale);
+        cs.clearRect(0, 0, canvas.width * 2, canvas.height * 2); //在给定的矩形内清除指定的像素
         cs.drawImage(
           image,
-          imgX,//x
-          imgY,//y
-          image.width * imgScale,//width
-          image.height * imgScale//height
+          imgX, //x
+          imgY, //y
+          image.width * imgScale, //width
+          image.height * imgScale //height
         );
+<<<<<<< HEAD:my-demo/src/components/canvas/demo.html
         // cs.drawImage(
         //   image2,
         //   img2X,//x
@@ -236,27 +261,24 @@
           // image2.width * imgScale,
           image2.height,//height要使用的图像高度
         );
+=======
+        console.log("imgScale", imgScale);
+        var drawLeft =
+          ((leftDis - imgX) / (image2.width * imgScale)) * canvas.width; //计算当前分割线相对于image的比例，并计算出相对于画布的宽度。
+        cs.drawImage(
+          image2,
+          0, //sx开始裁剪的位置
+          0, //sy
+          drawLeft, //swidth裁剪的宽度
+          image.height, //sheight裁剪的高度
+          imgX, //dx画布上的x坐标
+          imgY, //dY
+          drawLeft * imgScale, //width要使用的图像宽度
+          image2.height * imgScale //height要使用的图像高度
+        );
+        // }
+>>>>>>> 002a6027d7c445435e2291839fea56a69525b5d5:src/components/canvas/demo.html
       }
-
-      // 不需要这些
-
-      //防止容器留白
-      // function preventNull() {
-      //   var adaptSize = canvas.width - image.width * imgScale;
-      //   if (imgX > 0) {
-      //     imgX = 0;
-      //   } else if (imgX < adaptSize) {
-      //     imgX = canvas.width - image.width * imgScale;
-      //   }
-      //   if (imgY > 0) {
-      //     imgY = 0;
-      //   } else if (imgY < adaptSize) {
-      //     imgY = canvas.height - image.height * imgScale;
-      //   }
-      // }
-      //  function isPointInImageArea(point) {
-      //   return true;
-      // }
     </script>
   </body>
 </html>

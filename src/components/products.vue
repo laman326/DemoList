@@ -1,6 +1,6 @@
 <template>
   <div class="product item" style="margin-top:1rem">
-    <img src="../assets/flower.jpg" style="width:200px;height:100px" />
+    <img src="../../static/flower.jpg" style="width:200px;height:100px" />
     <div>
       <p>{{ product.name }}</p>
       <p>{{ product.price }}元</p>
