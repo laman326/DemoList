@@ -7,7 +7,8 @@ import home from '@/components/index'
 import canvasDemo from "../components/canvasDemo/canvasDemo.vue";
 import canvasDemo2 from "../components/canvasDemo/canvasDemo2.vue";
 import canvasImage from "../components/canvasDemo/CanvasImage.vue";
-// import thumList from "../components/Thumbnail/thumbnailList.vue"
+import swiper from "../components/Thumbnail/swiper.vue"
+import dragDemo from "../components/Thumbnail/draggableDemo.vue"
 
 Vue.use(Router)
 
@@ -34,11 +35,16 @@ export default new Router({
       component: canvasImage
     },
 
-    // {
-    //   path: "/thumList",
-    //   name: "thumList",
-    //   component: thumList
-    // },
+    {
+      path: "/swiper",
+      name: "swiper",
+      component: swiper
+    },
+    {
+      path: "/drag-demo",
+      name: "dragDemo",
+      component: dragDemo
+    },
     {
       path: "/mall",
       name: "mall",

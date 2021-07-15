@@ -38,12 +38,9 @@ export default {
       line2: null, //横线
       image1: null,
       image2: null,
-      canvasPosition:{},//canvas的位置,因为canvas可能距离左上角的距离不是0
-      // lineX: 0, //线的实时位置
-      // lineY: 0,
+      canvasPosition: {}, //canvas的位置,因为canvas可能距离左上角的距离不是0
       mouseLocation: {}, //鼠标位置
       flag: false, //判断是竖线对比还是横线对比，竖线为false
-      factor: 1, //单次缩放系数
       initWidth: 0, //经过自适应之后的图片宽度
       initHeight: 0
     };
@@ -95,9 +92,11 @@ export default {
       this.canvasPosition = this.canvas.getBoundingClientRect(); //canvas可能距离左上角的距离不是0
       //使得线的初始位置居中
       this.leftDis = this.canvas.width / 2;
-      this.line1.style.left = this.canvas.width / 2 + this.canvasPosition.left + "px";
+      this.line1.style.left =
+        this.canvas.width / 2 + this.canvasPosition.left + "px";
       this.topDis = this.canvas.height / 2 + this.canvasPosition.top;
-      this.line2.style.top = this.canvas.height / 2 + this.canvasPosition.top + "px";
+      this.line2.style.top =
+        this.canvas.height / 2 + this.canvasPosition.top + "px";
 
       this.image1 = new Image();
       this.image2 = new Image();
@@ -196,7 +195,9 @@ export default {
       let right = this.imagePosition.x + this.initWidth * this.imgScale;
       let top = this.imagePosition.y + this.canvasPosition.top;
       let bottom =
-        this.imagePosition.y + this.canvasPosition.top + this.initHeight * this.imgScale;
+        this.imagePosition.y +
+        this.canvasPosition.top +
+        this.initHeight * this.imgScale;
       //如果是横线对比则返回上下，竖线对比则返回左右范围
       let min, max;
       if (this.flag) {
@@ -228,10 +229,10 @@ export default {
       this.drawImage();
     },
     zoom(mousex, mousey, delta) {
-      if (this.flag) {      
-        mousey = this.topDis-this.canvasPosition.top; 
+      if (this.flag) {
+        mousey = this.topDis - this.canvasPosition.top;
       } else {
-        mousex = this.leftDis-this.canvasPosition.left;
+        mousex = this.leftDis - this.canvasPosition.left;
       }
 
       let factor = 1 + 0.1 * delta;
@@ -251,44 +252,32 @@ export default {
     //竖线移动事件
     handleLineDown(evt) {
       console.log(`----------进来------------`);
-      let oldLinePostion;
-      let newLinePostion;
+      let oldLinePosition;
+      let newLinePosition;
 
       if (this.flag) {
-        oldLinePostion = this.line.style.top;
+        oldLinePosition = Number(this.line.style.top.slice(0, -2));
       } else {
-        oldLinePostion = this.line.style.left;
+        oldLinePosition = Number(this.line.style.left.slice(0, -2));
       }
-
-      oldLinePostion = Number(oldLinePostion.slice(0, -2));
-
       let mouseX = evt.clientX;
       let mouseY = evt.clientY;
       document.onmousemove = evt => {
         let changeX = evt.clientX - mouseX;
         let changeY = evt.clientY - mouseY;
         if (this.flag) {
-          newLinePostion = oldLinePostion + changeY;
+          newLinePosition = this.getUpdateLinePosition(
+            oldLinePosition + changeY
+          );
+          this.topDis = newLinePosition;
+          this.line.style.top = newLinePosition + "px";
         } else {
-          newLinePostion = oldLinePostion + changeX;
+          newLinePosition = this.getUpdateLinePosition(
+            oldLinePosition + changeX
+          );
+          this.leftDis = newLinePosition;
+          this.line.style.left = newLinePosition + "px";
         }
-
-        let limit = this.limitLine();
-        console.log("limit", limit);
-        if (newLinePostion < limit.min) {
-          newLinePostion = limit.min;
-        }
-        if (newLinePostion > limit.max) {
-          newLinePostion = limit.max;
-        }
-        if (this.flag) {
-          this.topDis = newLinePostion;
-          this.line.style.top = newLinePostion + "px";
-        } else {
-          this.leftDis = newLinePostion;
-          this.line.style.left = newLinePostion + "px";
-        }
-
         this.drawImage();
       };
       document.onmouseup = function(evt) {
@@ -296,12 +285,23 @@ export default {
         document.onmouseup = null;
       };
     },
+    getUpdateLinePosition(newLinePosition) {
+      let limit = this.limitLine();
+      console.log("limit", limit);
+      if (newLinePosition < limit.min) {
+        newLinePosition = limit.min;
+      }
+      if (newLinePosition > limit.max) {
+        newLinePosition = limit.max;
+      }
+      return newLinePosition;
+    },
 
     //windowToCanvas此方法用于鼠标所在点的坐标切换到画布上的坐标
     windowToCanvas(canvas, x, y) {
       return {
-        x: x - this.canvasPosition.left ,
-        y: y - this.canvasPosition.top 
+        x: x - this.canvasPosition.left,
+        y: y - this.canvasPosition.top
       };
     },
     // 判断是否在画布范围内
@@ -350,6 +350,7 @@ export default {
 
       let cutHeight = this.image2.height;
       let useHeight = this.imagePosition.height;
+
       if (this.flag) {
         //计算当前分割线相对于image的比例，并计算出相对于画布的高度。
         console.log("this.imagePosition.y", this.imagePosition.y);
@@ -365,8 +366,9 @@ export default {
         useHeight = scale * this.initHeight * this.imgScale;
       } else {
         //计算当前分割线相对于image的比例，并计算出相对于画布的宽度。
+        console.log("this.canvasPosition", this.canvasPosition);
         let scale =
-          (this.leftDis - this.imagePosition.x) /
+          (this.leftDis - this.imagePosition.x - this.canvasPosition.left) /
           (this.initWidth * this.imgScale);
         cutLeft = scale * this.image2.width;
         useLeft = scale * this.initWidth * this.imgScale;

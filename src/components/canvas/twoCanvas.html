@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="LF" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title></title>
+  </head>
+  <body style="position: relative;">
+    <canvas
+      id="cs1"
+      width="500px"
+      height="500px"
+      style="position: absolute "
+    ></canvas>
+    <canvas
+      id="cs2"
+      width="500px"
+      height="500px"
+      style="position:absolute"
+    ></canvas>
+    <div
+      id="line2"
+      style=" position:absolute;top:250px;width:500px;height: 0px; border:2px solid red;background-color: red;"
+    ></div>
+    <div
+      id="point"
+      style=" position:absolute;top:250px;left:250px;width:1px;height: 1px; border:1px solid rgb(27, 19, 19);background-color: rgb(22, 14, 14);"
+    ></div>
+
+    <script>
+      var canvas1 = document.getElementById("cs1");
+      var cs1 = canvas1.getContext("2d");
+      var canvas2 = document.getElementById("cs2");
+      var cs2 = canvas2.getContext("2d");
+      var line = document.getElementById("line2");
+       var linePosition=line.getBoundingClientRect();
+       console.log('linePosition',linePosition);
+       var lineLeft=Number(line.style.width.slice(0, -2))/2;
+       var lineTop=linePosition.top;
+       console.log('lineLeft',lineLeft);
+       console.log('lineTop',lineTop);
+      line.onmousedown = function(evt) {
+          
+       
+        console.log(`----------进来------------`);
+        var lineX = Number(line.style.left.slice(0, -2));
+        var mouseX = evt.clientX;
+        document.onmousemove = function(evt) {
+            var radians = Math.atan2(evt.clientX - lineLeft, evt.clientY - lineTop);
+            console.log('radians',radians);
+            var degree = (radians * (180 / Math.PI) * -1) +180;
+            console.log('degree',degree);
+            degree=0;
+            
+            line.style.transform="rotate("+degree+"deg)"
+        
+        };
+        document.onmouseup = function(evt) {
+          // line.style.width='0px'
+          //   console.log('------------')
+          line.style.transform="rotate(0deg)"
+          document.onmousemove = null;
+          document.onmouseup = null;
+        };
+      };
+
+      var image = new Image();
+      var image2 = new Image();
+
+      image.onload = function() {
+        drawImage(cs1, image, canvas1);
+      };
+      image.src = "../../../static/flower.jpg";
+      image2.onload = function() {
+        drawImage2(cs2, image2, canvas2);
+      };
+      image2.src = "../../../static/营业.jpg";
+      function drawImage(cs, image, canvas, flag) {
+        cs.clearRect(0, 0, canvas.width * 2, canvas.height * 2); //在给定的矩形内清除指定的像素
+
+        cs.drawImage(
+          image,
+          0, //x
+          0, //y
+          image.width, //width
+          image.height //height
+        );
+      }
+      function drawImage2(cs, image, canvas, flag) {
+        cs.clearRect(0, 0, canvas.width * 2, canvas.height * 2); //在给定的矩形内清除指定的像素
+
+        cs.drawImage(
+          image2,
+          0, //sx开始裁剪的位置
+          0, //sy
+          100, //swidth裁剪的宽度
+          image.height, //sheight裁剪的高度
+          0, //dx画布上的x坐标
+          0, //dY
+          100, //width要使用的图像宽度
+          image.height //height要使用的图像高度
+        );
+      }
+    </script>
+  </body>
+</html>
