@@ -9,6 +9,9 @@ import canvasDemo2 from "../components/canvasDemo/canvasDemo2.vue";
 import canvasImage from "../components/canvasDemo/CanvasImage.vue";
 import swiper from "../components/Thumbnail/swiper.vue"
 import dragDemo from "../components/Thumbnail/draggableDemo.vue"
+import modal from "../components/Thumbnail/modal.vue"
+import dragModal from "../components/Thumbnail/dragModal.vue"
+import galleryDemo from "../components/Thumbnail/galleryDemo.vue"
 
 Vue.use(Router)
 
@@ -45,6 +48,22 @@ export default new Router({
       name: "dragDemo",
       component: dragDemo
     },
+    {
+      path: "/modal",
+      name: "modal",
+      component: modal
+    },
+    {
+      path: "/dragModal",
+      name: "dragModal",
+      component: dragModal
+    },
+    {
+      path: "/galleryDemo",
+      name: "galleryDemo",
+      component: galleryDemo
+    },
+
     {
       path: "/mall",
       name: "mall",

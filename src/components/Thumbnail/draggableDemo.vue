@@ -6,7 +6,7 @@
       <div v-for="imgs in imageList" :key="imgs.index" class="dragItem">
         <div class="close">
           <span>{{ imgs.title }}</span>
-          <span @click="deleteImg(imgs)" title="close this item">
+          <span @click="deleteImg(imgs)" title="close this item" style="float:right">
             <i class="el-icon-close"></i>
           </span>
         </div>
@@ -80,15 +80,23 @@ export default {
 <style scoped>
 .dragItem {
   /* flex: 1 1 auto; */
-  margin-left: 10px;
+  /* margin-left: 10px; */
+  margin-top: 10px;
 }
+
 #drag {
+  float: left;
+  height: 900px;
   padding: 0;
   /* margin-top: 350px; */
-  position: relative;
-  display: flex;
+  /* position: relative;
+  display: flex; */
   /* border: 1px solid black; */
   overflow: auto;
+
+}
+#drag::-webkit-scrollbar{
+  display: none;
 }
 img {
   width: 200px;

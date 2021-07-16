@@ -6,6 +6,9 @@
      <button@click="goToZoom">师兄对比canvas</button>
      <button@click="goToSwiper">轮播图</button>
      <button@click="goToDrag">拖拽列表</button>
+     <button @click="goToModal">蒙版</button>
+     <button @click="goToDragModal">带蒙版的拖拽</button>
+     <button @click="goToGallery">游廊用起来</button>
  
  </div>
 </template>
@@ -38,7 +41,18 @@
      },
      goToDrag(){
           this.$router.push('/drag-demo')
-     }
+     },
+     goToModal(){
+          this.$router.push('/modal')
+     },
+     goToDragModal(){
+          this.$router.push('/dragModal')
+
+     },
+      goToGallery(){
+          this.$router.push('/galleryDemo')
+
+     },
  
    },
    components: {
