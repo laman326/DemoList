@@ -9,6 +9,7 @@
      <button @click="goToModal">蒙版</button>
      <button @click="goToDragModal">带蒙版的拖拽</button>
      <button @click="goToGallery">游廊用起来</button>
+     <button @click="goToRotate">旋转图片</button>
  
  </div>
 </template>
@@ -51,8 +52,10 @@
      },
       goToGallery(){
           this.$router.push('/galleryDemo')
-
      },
+     goToRotate(){
+          this.$router.push('/rotate')
+     }
  
    },
    components: {

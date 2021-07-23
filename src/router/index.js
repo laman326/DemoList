@@ -12,6 +12,7 @@ import dragDemo from "../components/Thumbnail/draggableDemo.vue"
 import modal from "../components/Thumbnail/modal.vue"
 import dragModal from "../components/Thumbnail/dragModal.vue"
 import galleryDemo from "../components/Thumbnail/galleryDemo.vue"
+import rotate from "../components/canvasRotate/rotate.vue"
 
 Vue.use(Router)
 
@@ -62,6 +63,11 @@ export default new Router({
       path: "/galleryDemo",
       name: "galleryDemo",
       component: galleryDemo
+    },
+    {
+      path: "/rotate",
+      name: "rotate",
+      component: rotate
     },
 
     {

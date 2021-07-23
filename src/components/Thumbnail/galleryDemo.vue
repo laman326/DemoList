@@ -1,6 +1,17 @@
 <template>
   <div>
-    <gallery :sortData="imageList" :closeOnClickModal="false" @remove="deleteImg" @update="setNewImg" >
+    <gallery
+      :sortData="imageList"
+      :closeOnClickModal="false"
+      @remove="deleteImg"
+      @update="setNewImg"
+    >
+      <template v-slot:headButton>
+        <button>已选</button>
+      </template>
+      <template v-slot:dragItem='item'>
+        <img  :src="item.src"  /> 
+      </template>
     </gallery>
   </div>
 </template>
@@ -17,11 +28,17 @@ export default {
     return {};
   },
   computed: {
-      ...mapGetters(["imageList"]),
+    ...mapGetters(["imageList"])
   },
   methods: {
-      ...mapActions(["deleteImg", "setNewImg"]),
+    ...mapActions(["deleteImg", "setNewImg"])
   }
-}
+};
 </script>
-<style scoped></style>
+<style scoped>
+img {
+  width: 200px;
+  height: 130px;
+  object-fit: contain;
+}
+</style>
