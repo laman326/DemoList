@@ -79,7 +79,7 @@ export default {
       );
     },
     reverse(direction) {
-      let reDirection = this.degree / 90;
+      let reDirection = Math.abs(this.degree / 90);
       console.log("reDirection", reDirection);
       if (reDirection === 1 || reDirection === 3) {
         if (direction === "x") {
