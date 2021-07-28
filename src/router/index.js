@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import mall from '@/components/mall'
-import shoppingcart from '@/components/shoppingcart'
+import mall from '../components/VuexDemo-mall/mall.vue'
+import shoppingcart from '@/components/VuexDemo-mall/shoppingcart.vue'
 import home from '@/components/index'
 import canvasDemo from "../components/canvasDemo/canvasDemo.vue";
 import canvasDemo2 from "../components/canvasDemo/canvasDemo2.vue";
@@ -13,6 +13,9 @@ import modal from "../components/Thumbnail/modal.vue"
 import dragModal from "../components/Thumbnail/dragModal.vue"
 import galleryDemo from "../components/Thumbnail/galleryDemo.vue"
 import rotate from "../components/canvasRotate/rotate.vue"
+import broadCast from "../components/broadCastDemo/broadCast.vue"
+import rotateWithBitMap from "../components/canvasRotate/rotateWithBitMap.vue"
+import testOffsrceern from "../components/canvasRotate/canvasExample.vue";
 
 Vue.use(Router)
 
@@ -69,6 +72,11 @@ export default new Router({
       name: "rotate",
       component: rotate
     },
+    {
+      path: "/broadCast",
+      name: "broadCast",
+      component: broadCast
+    },
 
     {
       path: "/mall",
@@ -80,6 +88,16 @@ export default new Router({
       path: "/pay",
       name: "shoppingcart",
       component: shoppingcart
+    },
+    {
+      path: "/rotateWithBitMap",
+      name: "rotateWithBitMap",
+      component: rotateWithBitMap
+    },
+    {
+      path: "/testOffsrceern",
+      name: "testOffsrceern",
+      component: testOffsrceern
     }
   ]
 });

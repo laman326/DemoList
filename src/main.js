@@ -19,12 +19,20 @@ Vue.use(VueAwesomeSwiper);
 import "swiper/dist/css/swiper.css";
 // import "swiper/swiper-bundle.css";
 
+var Bus=new Vue();
+
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(Button);
 Vue.prototype.$ajax = axios;
-
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get: function() {
+      return Bus;
+    }
+  },
+});
 
 /* eslint-disable no-new */
 new Vue({

@@ -10,10 +10,10 @@
       :product="product"
     ></products>
     <el-button @click="goback">返回选购</el-button>
-    <!-- <el-input type="file" value="hhh"> -->
+    <!-- <el-input type="file" value="hhh">
     <el-input type="file" label="shi"></el-input>
     <el-button class="btn btn-theme" onclick="upload.click()">你好</el-button>
-    <input type="file" name="upload" id="upload" @click="test" style="display: none;" />
+    <input type="file" name="upload" id="upload" @click="test" style="display: none;" /> -->
  
     <!-- {{}} -->
   </div>

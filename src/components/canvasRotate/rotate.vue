@@ -5,12 +5,12 @@
         ><i class="el-icon-refresh-right"></i
       ></el-button>
       <el-button @click="rotate(-90)"
-        ><i class="el-icon-refresh-right"  style="transform:scaleX(-1)"></i
+        ><i class="el-icon-refresh-right" style="transform:scaleX(-1)"></i
       ></el-button>
       <el-button @click="reverse('y')">
         <i class="el-icon-sort"></i>
       </el-button>
-        <el-button @click="reverse('x')">
+      <el-button @click="reverse('x')">
         <i class="el-icon-sort" style="transform:rotate(90deg)"></i>
       </el-button>
     </div>
@@ -34,8 +34,8 @@ export default {
       canvas2: null,
       cs1: null,
       cs2: null,
-      scaleX:1,
-      scaleY:1,
+      scaleX: 1,
+      scaleY: 1
     };
   },
   mounted() {
@@ -53,7 +53,7 @@ export default {
     this.image1.onload = () => {
       this.drawImage(this.image1, this.cs1);
     };
-    this.image1.src = "../../../static/双鱼座.jpg";
+    this.image1.src = "../../../static/flower.jpg";
     //   this.image2.onload = () => {
     //     this.drawImage(this.image2, this.cs2);
     //   };
@@ -66,7 +66,6 @@ export default {
       this.degree = this.degree % 360;
       console.log("current", this.degree);
       this.transform();
-
     },
     drawImage(image, cs) {
       cs.clearRect(0, 0, 300, 300); //在给定的矩形内清除指定的像素
@@ -90,11 +89,12 @@ export default {
       }
 
       if (direction === "x") {
-        this.scaleX*=-1;
+        this.scaleX *= -1;
       } else if (direction === "y") {
-         this.scaleY*=-1;
+        this.scaleY *= -1;
       }
-      this.reserveDegree = "scaleX(" + this.scaleX+")"+"scaleY(" + this.scaleY+")";
+      this.reserveDegree =
+        "scaleX(" + this.scaleX + ")" + "scaleY(" + this.scaleY + ")";
       this.transform();
     },
     transform() {
