@@ -5,7 +5,6 @@ import mall from '../components/VuexDemo-mall/mall.vue'
 import shoppingcart from '@/components/VuexDemo-mall/shoppingcart.vue'
 import home from '@/components/index'
 import canvasDemo from "../components/canvasDemo/canvasDemo.vue";
-import canvasDemo2 from "../components/canvasDemo/canvasDemo2.vue";
 import canvasImage from "../components/canvasDemo/CanvasImage.vue";
 import swiper from "../components/Thumbnail/swiper.vue"
 import dragDemo from "../components/Thumbnail/draggableDemo.vue"
@@ -30,11 +29,6 @@ export default new Router({
       path: "/canvas",
       name: "canvas",
       component: canvasDemo
-    },
-    {
-      path: "/canvas2",
-      name: "canvas2",
-      component: canvasDemo2
     },
     {
       path: "/canvas-image",

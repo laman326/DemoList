@@ -15,23 +15,31 @@ const { mapGetters, mapActions } = createNamespacedHelpers("imgList");
 export default {
   name: "broadCast",
   data() {
-    return {};
+    return {
+      seletedId: null
+    };
   },
   mounted() {
     this.$bus.$on("image_broadcast", this.handleBroadcast);
+    this.$bus.$on("image_handleSelect", this.handleSelect);
   },
   computed: {
     ...mapGetters(["imageList"])
   },
   methods: {
+    handleSelect(id) {
+      this.seletedId = id;
+    },
     handleBroadcast(data) {
       const { name, evt } = data;
-      this.imageList.forEach(item => {
-        if (item.src !== evt.id) {
+        this.imageList.forEach(item => {
           let canvas = this.$refs[item.src][0];
-          canvas[name](evt);
-        }
-      });
+          if (item.src !== evt.id) {
+            if (!this.seletedId||!canvas.syn) {
+              canvas[name](evt);
+            }
+          }
+        });
     }
   },
   components: { imageCanvas }

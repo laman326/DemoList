@@ -1,8 +1,7 @@
 <template>
   <div>
     <el-button type="text" @click="goToMall">去商场</el-button>
-    <el-button type="text" @click="goToCanvas">去横线对比canvas</el-button>
-    <el-button type="text" @click="goToCanvas2">去竖线对比canvas</el-button>
+    <el-button type="text" @click="goToCanvas">横线对比canvas</el-button>
     <el-button type="text" @click="goToZoom">师兄对比canvas</el-button>
     <el-button type="text" @click="goToSwiper">轮播图</el-button>
     <el-button type="text" @click="goToDrag">拖拽列表</el-button>
@@ -27,9 +26,6 @@ export default {
   methods: {
     goToCanvas() {
       this.$router.push("/canvas");
-    },
-    goToCanvas2() {
-      this.$router.push("/canvas2");
     },
     goToMall() {
       this.$router.push("/mall");

@@ -1,13 +1,11 @@
 <template>
-  <div>
     <canvas
       ref="canvas"
-      width="300px"
-      height="300px"
-      style="border:1px solid black "
+      width="320px"
+      height="320px"
+      style="border:2px solid black;margin-left:5px "
       @dblclick="changeState"
     ></canvas>
-  </div>
 </template>
 <script>
 import { throttle } from "throttle-debounce";
@@ -41,9 +39,22 @@ export default {
     };
     this.image.src = this.imgSrc;
     this.addEvents();
+    this.$bus.$on("image_handleSelect", this.handleSelect);
   },
   computed: {},
+  watch:{
+    syn(){
+      this.changeStyle()
+    }
+  },
   methods: {
+    handleSelect(selectedId){
+      if(this.id===selectedId){
+        this.syn=false
+      }else{
+        this.syn=true
+      }
+    },
     //添加所有的事件
     addEvents() {
       //鼠标滚动
@@ -78,18 +89,22 @@ export default {
     },
     drawImage() {
       let { x, y, width, height } = this.imagePosition;
-      this.cs.clearRect(0, 0, 300, 300); //在给定的矩形内清除指定的像素
+      this.cs.clearRect(0, 0, 320, 320); //在给定的矩形内清除指定的像素
       this.cs.drawImage(this.image, x, y, width, height);
     },
     changeState() {
       this.syn = !this.syn;
-      if(this.syn){
-        this.canvas.classList.remove('asynClass');
-        this.canvas.classList.add('synClass')
+      if(!this.syn){
+        this.$bus.$emit("image_handleSelect",this.id)
       }else{
-        this.canvas.classList.remove('synClass');
+        this.$bus.$emit("image_handleSelect",null)
+      }      
+    },
+    changeStyle(){
+       if(this.syn){
+        this.canvas.classList.remove('asynClass');
+      }else{
         this.canvas.classList.add('asynClass')
-        console.log('this.canvas.classList',this.canvas.classList);
       }
     },
     //处理广播事件
@@ -191,11 +206,8 @@ export default {
 };
 </script>
 <style scoped>
-.synClass{
-  background-color: white;
-}
 .asynClass{
-  background-color: coral;
+  border: 2px solid orangered !important;
 
 }
 </style>
