@@ -1,12 +1,13 @@
 <template>
   <div>
     <div class="toolBar">
-      <el-button @click="rotate(90)"
-        ><i class="el-icon-refresh-right"></i
-      ></el-button>
       <el-button @click="rotate(-90)"
         ><i class="el-icon-refresh-right" style="transform:scaleX(-1)"></i
       ></el-button>
+      <el-button @click="rotate(90)"
+        ><i class="el-icon-refresh-right"></i
+      ></el-button>
+
       <el-button @click="reverse('y')">
         <i class="el-icon-sort"></i>
       </el-button>

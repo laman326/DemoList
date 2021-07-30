@@ -144,7 +144,7 @@ export default {
     this.image = new Image();
     this.canvas = this.$refs.canvas;
     console.dir(this.canvas);
-    this.ctx = this.canvas.getContext("2d", { alpha: false });
+    this.ctx = this.canvas.getContext("2d");
     this.canvasEventInit();
     this.image.src = "../../../static/flower.jpg";
     this.image.onload = async () => {

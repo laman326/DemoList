@@ -1,31 +1,27 @@
 <template>
   <div>
     <div class="toolBar">
-      <el-button @click="rotate(90)"
-        ><i class="el-icon-refresh-right"></i
-      ></el-button>
       <el-button @click="rotate(-90)"
         ><i class="el-icon-refresh-right" style="transform:scaleX(-1)"></i
       ></el-button>
-      <el-button @click="reverse('y')">
+      <el-button @click="rotate(90)"
+        ><i class="el-icon-refresh-right"></i
+      ></el-button>
+      <el-button @click="reverse(1)">
         <i class="el-icon-sort"></i>
       </el-button>
-      <el-button @click="reverse('x')">
+      <el-button @click="reverse(-1)">
         <i class="el-icon-sort" style="transform:rotate(90deg)"></i>
       </el-button>
     </div>
     <div class="canvasItems">
-      <!-- <canvas id="cs1" width="400px" height="400px"></canvas> -->
       <canvas
         id="cs2"
-        width="1314px"
-        height="1300px"
+        width="500px"
+        height="500px"
         style="position:relative;left:0;top:0;border:1px solid black"
       >
       </canvas>
-      <div
-        style="width:298px;height:298px;position:absolute ;left:440px;top:900px;border:1px solid black;z-index:-1;background-color:skyblue;"
-      ></div>
     </div>
   </div>
 </template>
@@ -39,57 +35,21 @@ export default {
       cs1: null,
       image2: null,
       canvas2: null,
-      cs2: null
+      cs2: null,
+      bitMap: null
     };
   },
   mounted() {
-    // this.canvas1 = document.getElementById("cs1");
-    // // console.log('this.canvas1.width',this.canvas1.width);
-    // this.cs1 = this.canvas1.getContext("2d");
     this.canvas2 = document.getElementById("cs2");
     this.cs2 = this.canvas2.getContext("2d");
-
     this.image1 = new Image();
-    // this.img=this.image1
-    let bitMap;
     this.image1.onload = async () => {
       console.log("this.image1.width", this.image1.width);
+      this.drawImage(this.image1, this.cs2);
       let offsreen = new OffscreenCanvas(this.image1.width, this.image1.height);
-      // let offsreen = new OffscreenCanvas(this.image1.height, this.image1.width);
       let offCtx = offsreen.getContext("2d");
-      // offCtx.translate(0, this.image1.height);
-      // offCtx.rotate((270 * Math.PI) / 180);
-      //左右翻转
-      // offCtx.translate(this.image1.width,0);
-      // offCtx.scale(-1,1);
-      //上下翻转
-      // offCtx.translate(0,this.image1.height);
-      // offCtx.scale(1,-1);
-      // 左旋90°
-      offCtx.translate(0, this.image1.height);
-      offCtx.rotate((-90 * Math.PI) / 180);
-      //右旋90°
-      // offCtx.translate(this.image1.width, 0);
-      // offCtx.rotate((90 * Math.PI) / 180);
-
-
-      // offCtx.translate(0, 50);
-      // offCtx.rotate((90 * Math.PI) / 180);
-
-
-      offCtx.drawImage(this.image1, 0, 0,this.image1.width,this.image1.height );
-      // offCtx.drawImage(this.image1, 0, 0,this.image1.height,this.image1.width );
-      bitMap = await offsreen.transferToImageBitmap();
-    
-      console.log("bitMap", bitMap);
-      this.drawImage(bitMap, this.cs2);
-
-      // bitMap = await createImageBitmap(this.image1, 0, 0, 1280, 853);
-      // // bitMap= await createImageBitmap(this.image1);
-      // console.log("bitMap", bitMap);
-
-      // this.drawImage(this.image1, this.cs1);
-      // this.drawImage(bitMap, this.cs2);
+      offCtx.drawImage(this.image1, 0, 0);
+      this.bitMap = await offsreen.transferToImageBitmap();
     };
     this.image1.src = "../../../static/flower.jpg";
   },
@@ -101,11 +61,44 @@ export default {
         image,
         0, //x
         0, //y
-        // 853,
-        // 1280
-        1280, //width
-        853 //height
+        500,
+        500
       );
+    },
+    async rotate(degree) {
+      let offscreenWidth = this.bitMap.height;
+      let offscreenHight = this.bitMap.width;
+
+      let offsreen = new OffscreenCanvas(offscreenWidth, offscreenHight);
+      let offCtx = offsreen.getContext("2d");
+
+      if (degree < 0) {
+        offCtx.translate(0, this.bitMap.width);
+        offCtx.rotate((-90 * Math.PI) / 180);
+      } else if (degree > 0) {
+        offCtx.translate(this.bitMap.height, 0);
+        offCtx.rotate((90 * Math.PI) / 180);
+      }
+      offCtx.drawImage(this.bitMap, 0, 0);
+      this.bitMap = await offsreen.transferToImageBitmap();
+      this.drawImage(this.bitMap, this.cs2);
+    },
+    async reverse(direction) {
+      let offscreenWidth = this.bitMap.width;
+      let offscreenHight = this.bitMap.height;
+
+      let offsreen = new OffscreenCanvas(offscreenWidth, offscreenHight);
+      let offCtx = offsreen.getContext("2d");
+      if (direction < 0) {
+        offCtx.translate(this.bitMap.width, 0);
+        offCtx.scale(-1, 1);
+      } else if (direction > 0) {
+        offCtx.translate(0, this.image1.height);
+        offCtx.scale(1, -1);
+      }
+      offCtx.drawImage(this.bitMap, 0, 0);
+      this.bitMap = await offsreen.transferToImageBitmap();
+      this.drawImage(this.bitMap, this.cs2);
     },
     getImageInitPos(canvas, image) {
       const cw = canvas.width;
