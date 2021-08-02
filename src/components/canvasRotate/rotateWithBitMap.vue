@@ -93,7 +93,7 @@ export default {
         offCtx.translate(this.bitMap.width, 0);
         offCtx.scale(-1, 1);
       } else if (direction > 0) {
-        offCtx.translate(0, this.image1.height);
+        offCtx.translate(0, this.bitMap.height);
         offCtx.scale(1, -1);
       }
       offCtx.drawImage(this.bitMap, 0, 0);
