@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import mall from '../components/VuexDemo-mall/mall.vue'
 import shoppingcart from '@/components/VuexDemo-mall/shoppingcart.vue'
-import home from '@/components/index'
+import home from '@/components/index' 
 import canvasDemo from "../components/canvasDemo/canvasDemo.vue";
 import canvasImage from "../components/canvasDemo/CanvasImage.vue";
 import swiper from "../components/Thumbnail/swiper.vue"
@@ -15,6 +15,7 @@ import rotate from "../components/canvasRotate/rotate.vue"
 import broadCast from "../components/broadCastDemo/broadCast.vue"
 import rotateWithBitMap from "../components/canvasRotate/rotateWithBitMap.vue"
 import testOffsrceern from "../components/canvasRotate/canvasExample.vue";
+import cutImageToDrawCanvas from "../components/canvasRotate/cutImageToDrawCanvas.vue"
 
 Vue.use(Router)
 
@@ -92,6 +93,11 @@ export default new Router({
       path: "/testOffsrceern",
       name: "testOffsrceern",
       component: testOffsrceern
+    },
+    {
+      path: "/cutImageToDrawCanvas",
+      name: "cutImageToDrawCanvas",
+      component: cutImageToDrawCanvas
     }
   ]
 });

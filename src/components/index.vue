@@ -13,6 +13,9 @@
     <el-button type="text" @click="goToRotateWithBitMap"
       >BitMap图片旋转</el-button
     >
+    <el-button type="text" @click="goToCutImageToDrawCanvas"
+      >离屏旋转并裁剪</el-button
+    >
     <el-button type="text" @click="goToOffsrceern">离屏绘图</el-button>
   </div>
 </template>
@@ -59,6 +62,9 @@ export default {
     },
     goToOffsrceern() {
       this.$router.push("/testOffsrceern");
+    },
+    goToCutImageToDrawCanvas(){
+       this.$router.push("/cutImageToDrawCanvas");
     }
   },
   components: {}

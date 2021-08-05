@@ -53,7 +53,6 @@ export default {
       cHeight: 0,
       cWidth1: 0,
       cHeight1: 0,
-      isMouseDown: false
     };
   },
   mounted() {
@@ -87,38 +86,11 @@ export default {
       },
       false
     );
-    this.canvas2.addEventListener(
-      "mousedown",
-      evt => {
-        this.handleMouseDown(evt); //鼠标按下
-      },
-      false
-    );
-    document.body.addEventListener(
-      "mouseup",
-      () => {
-        this.handleMouseUp();
-      },
-      false
-    );
-    this.canvas2.addEventListener(
-      "mousemove",
-      evt => {
-        this.handleMouseMove(evt);
-      },
-      false
-    );
   },
   computed: {},
   methods: {
     drawImage(image, cs) {
       let { x, y, width, height } = this.imagePosition;
-      // console.log('cs.width',this.canvas2.width);
-      // console.log('width',width);
-
-      // console.log('x',x);
-      // console.log('y',y);
-
       cs.clearRect(0, 0, this.canvas2.width, this.canvas2.height); //在给定的矩形内清除指定的像素
       cs.drawImage(
         image,
@@ -138,29 +110,11 @@ export default {
       if (degree < 0) {
         offCtx.translate(0, this.bitMap.width);
         offCtx.rotate((-90 * Math.PI) / 180);
-        [this.imagePosition.width, this.imagePosition.height] = [
-          this.imagePosition.height,
-          this.imagePosition.width
-        ];
       } else if (degree > 0) {
         offCtx.translate(this.bitMap.height, 0);
         offCtx.rotate((90 * Math.PI) / 180);
-        [this.imagePosition.width, this.imagePosition.height] = [
-          this.imagePosition.height,
-          this.imagePosition.width
-        ];
       }
-      //旋转后保持居中
-
-      if (this.canvas2.width - this.imagePosition.width >= 0) {
-        this.imagePosition.x = (this.canvas2.width - this.imagePosition.width) / 2;
-      }
-
-      // if (this.canvas2.height - this.imagePosition.height >= 0) {
-        this.imagePosition.y = (this.canvas2.height - this.imagePosition.height) / 2;
-      // }
-      //但是这样放大之后旋转就完全不是原来的位置了
-
+    //   this.getTransformPosition(degree);
 
       offCtx.drawImage(this.bitMap, 0, 0);
       this.bitMap = await offsreen.transferToImageBitmap();
@@ -180,7 +134,7 @@ export default {
         offCtx.translate(0, this.bitMap.height);
         offCtx.scale(1, -1);
       }
-      // this.getTransformPosition(direction);
+    //   this.getTransformPosition(direction);
       offCtx.drawImage(this.bitMap, 0, 0);
       this.bitMap = await offsreen.transferToImageBitmap();
       this.drawImage(this.bitMap, this.cs2);
@@ -194,6 +148,7 @@ export default {
       const imageRadio = iw / ih;
       let x = 0;
       let y = 0;
+      let z = 0;
       let height = ch;
       let width = cw;
       let widthScaleRatio = iw / cw;
@@ -232,44 +187,6 @@ export default {
       this.imagePosition = this.zoom(this.mousex, this.mousey, delta);
       this.drawImage(this.bitMap, this.cs2);
     },
-    //鼠标按下事件
-    handleMouseDown(evt) {
-      this.mouseLocation = this.windowToCanvas(
-        this.canvas2,
-        evt.clientX,
-        evt.clientY
-      );
-      this.isMouseDown = true;
-    },
-    // 鼠标弹起
-    handleMouseUp() {
-      this.canvas2.style.cursor = "default";
-      this.isMouseDown = false;
-    },
-    //鼠标移动
-    handleMouseMove(event) {
-      console.log("this.isMouseDown", this.isMouseDown);
-      if (this.isMouseDown) {
-        this.canvas2.style.cursor = "move";
-        let mouseLocation = this.windowToCanvas(
-          this.canvas2,
-          event.clientX,
-          event.clientY
-        );
-        if (this.isDivArea({ x: event.clientX, y: event.clientY })) {
-          let dx = mouseLocation.x - this.mouseLocation.x; //鼠标最新在的位置-鼠标按下时的位置
-          let dy = mouseLocation.y - this.mouseLocation.y;
-          this.mouseLocation = mouseLocation; //把最新的位置赋值给鼠标按下时的位置
-          this.imagePosition.x += dx;
-          this.imagePosition.y += dy;
-        } else {
-          //鼠标移动至画布范围外，置鼠标弹起
-          this.canvas2.style.cursor = "default";
-          this.isMouseDown = false;
-        }
-        this.drawImage(this.bitMap, this.cs2);
-      }
-    },
     zoom(mousex, mousey, delta) {
       let factor = 1 + 0.1 * delta;
       let x = mousex - (mousex - this.imagePosition.x) * factor;
@@ -284,55 +201,11 @@ export default {
         width
       };
     },
-
-    //旋转翻转定位到原来的可视区域
-    // getTransformPosition(transform) {
-    //   console.log("this.imagePosition----before", this.imagePosition);
-    //   let { x, y, width, height } = this.imagePosition;
-
-    //   if (transform === 1) {
-    //     this.imagePosition.y = -(height + y - this.canvas2.height);
-    //   } else if (transform === -1) {
-    //     this.imagePosition.x = -(width + x - this.canvas2.width);
-    //   } else if (transform === 90) {
-    //     //顺时针
-    //     this.imagePosition.width = height;
-    //     this.imagePosition.height = width;
-    //     this.imagePosition.y = x;
-    //     this.imagePosition.x = -(height + y - this.cHeight);
-    //     // this.imagePosition.x = -(height + y - this.canvas2.height);
-    //     let cwidth = this.cWidth;
-    //     this.cWidth = this.cHeight;
-    //     this.cHeight = cwidth;
-    //   } else {
-    //     this.imagePosition.width = height;
-    //     this.imagePosition.height = width;
-    //     this.imagePosition.x = y;
-    //     // this.imagePosition.y = -(width + x - this.canvas2.width);
-
-    //     this.imagePosition.y = -(width + x - this.cWidth1);
-    //     let cwidth1 = this.cWidth1;
-    //     this.cWidth1 = this.cHeight1;
-    //     this.cHeight1 = cwidth1;
-    //   }
-    //   // console.log("this.imagePosition----after", this.imagePosition);
-    // },
     windowToCanvas(canvas, x, y) {
       return {
         x: x - this.canvasPosition.left,
         y: y - this.canvasPosition.top
       };
-    },
-    isDivArea(point) {
-      if (
-        point.x < 0 ||
-        point.x > this.canvas2.width ||
-        point.y < 0 ||
-        point.y > this.canvas2.height
-      ) {
-        return false;
-      }
-      return true;
     }
   },
   components: {}
