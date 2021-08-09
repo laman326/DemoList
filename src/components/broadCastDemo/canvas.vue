@@ -1,11 +1,11 @@
 <template>
-    <canvas
-      ref="canvas"
-      width="320px"
-      height="320px"
-      style="border:2px solid black;margin-left:5px "
-      @dblclick="changeState"
-    ></canvas>
+  <canvas
+    ref="canvas"
+    width="320px"
+    height="320px"
+    style="border:2px solid black;margin-left:5px "
+    @dblclick="changeState"
+  ></canvas>
 </template>
 <script>
 import { throttle } from "throttle-debounce";
@@ -25,10 +25,12 @@ export default {
       },
       syn: true,
       mouseLocation: null,
-      isMouseDown: false
+      isMouseDown: false,
+      // selectedId: null
     };
   },
   mounted() {
+    // console.log('this.selectedId',this.selectedId);
     this.id = this.imgSrc;
     this.canvas = this.$refs.canvas;
     this.cs = this.canvas.getContext("2d");
@@ -40,20 +42,22 @@ export default {
     this.image.src = this.imgSrc;
     this.addEvents();
     this.$bus.$on("image_handleSelect", this.handleSelect);
+    this.$bus.$on("image_broadcast", this.handleBroadcast);
   },
   computed: {},
-  watch:{
-    syn(){
-      this.changeStyle()
+  watch: {
+    syn() {
+      this.changeStyle();
     }
   },
   methods: {
-    handleSelect(selectedId){
-      if(this.id===selectedId){
-        this.syn=false
-      }else{
-        this.syn=true
+    handleSelect(selectedId) {
+      if (this.id === selectedId) {
+        this.syn = false;
+      } else {
+        this.syn = true;
       }
+      // this.selectedId = selectedId;
     },
     //添加所有的事件
     addEvents() {
@@ -61,28 +65,35 @@ export default {
       this.canvas.addEventListener(
         "mousewheel",
         evt => {
-          this.handleScroll(evt); //鼠标滚动触发
+          console.log('this.seletedId?',this.seletedId);
+          this.getPosition(evt);
+          this.broadCast("handleScroll", evt);
+          //鼠标滚动触发
         },
         false
       );
       this.canvas.addEventListener(
         "mousedown",
         evt => {
-          this.handleMouseDown(evt); //鼠标按下
+          this.getPosition(evt);
+          this.broadCast("handleMouseDown", evt);
+         //鼠标按下
         },
         false
       );
       document.body.addEventListener(
         "mouseup",
         evt => {
-          this.handleMouseUp(evt);
+          this.getPosition(evt);
+          this.broadCast("handleMouseUp", evt);
         },
         false
       );
       this.canvas.addEventListener(
         "mousemove",
         evt => {
-          this.handleMouseMove(evt);
+          this.getPosition(evt);
+          this.broadCast("handleMouseMove", evt);
         },
         false
       );
@@ -94,17 +105,17 @@ export default {
     },
     changeState() {
       this.syn = !this.syn;
-      if(!this.syn){
-        this.$bus.$emit("image_handleSelect",this.id)
-      }else{
-        this.$bus.$emit("image_handleSelect",null)
-      }      
+      if (!this.syn) {
+        this.$bus.$emit("image_handleSelect", this.id);
+      } else {
+        this.$bus.$emit("image_handleSelect", null);
+      }
     },
-    changeStyle(){
-       if(this.syn){
-        this.canvas.classList.remove('asynClass');
-      }else{
-        this.canvas.classList.add('asynClass')
+    changeStyle() {
+      if (this.syn) {
+        this.canvas.classList.remove("asynClass");
+      } else {
+        this.canvas.classList.add("asynClass");
       }
     },
     //处理广播事件
@@ -118,19 +129,25 @@ export default {
             });
           }
         })();
+      } else {
+        evt.id = this.id;
+        this[name](evt);
+      }
+    },
+    handleBroadcast({ name, evt }) {
+      if (this.syn || evt.id === this.id) {
+        this[name](evt);
       }
     },
     //鼠标按下事件
     handleMouseDown(evt) {
       this.mouseLocation = this.windowToCanvas(evt);
       this.isMouseDown = true;
-      this.broadCast("handleMouseDown", evt);
     },
     // 鼠标弹起
     handleMouseUp(evt) {
       this.canvas.style.cursor = "default";
       this.isMouseDown = false;
-      this.broadCast("handleMouseUp", evt);
     },
     //鼠标移动
     handleMouseMove(event) {
@@ -149,7 +166,6 @@ export default {
           this.isMouseDown = false;
         }
         this.drawImage();
-        this.broadCast("handleMouseMove", event);
       }
     },
     //滚轮缩放事件
@@ -160,7 +176,6 @@ export default {
       let delta = evt.wheelDelta / 120;
       this.imagePosition = this.zoom(mousex, mousey, delta);
       this.drawImage();
-      this.broadCast("handleScroll", evt);
     },
     zoom(mousex, mousey, delta) {
       let factor = 1 + 0.1 * delta;
@@ -177,18 +192,25 @@ export default {
       };
     },
     windowToCanvas(evt) {
-      if (evt.id) {
-        //如果有id,说明是它接收到的广播消息,则用传过来的相对位置就行
-        return evt.origin;
-      } else {
-        //如果没有id,说明是它触发的这个事件,计算一下鼠标相对画布的位置
-        let newPosition = {
-          x: evt.clientX - this.canvasPosition.left,
-          y: evt.clientY - this.canvasPosition.top
-        };
-        evt.origin = newPosition;
-        return newPosition;
-      }
+      console.log("evt.id", evt.id);
+      // if (evt.id!==this.id) {
+      //   //如果id！==自己的id,说明是它接收到的广播消息,则用传过来的相对位置就行
+      //   console.log('evt.origin',evt.origin);
+      //   return evt.origin;
+      // } else {
+      //   //id==自己的id,说明是它触发的这个事件,计算一下鼠标相对画布的位置
+      //   // console.log('zzzzz');
+
+      //   return newPosition;
+      // }
+      return evt.origin;
+    },
+    getPosition(evt) {
+      let newPosition = {
+        x: evt.clientX - this.canvasPosition.left,
+        y: evt.clientY - this.canvasPosition.top
+      };
+      evt.origin = newPosition;
     },
     isDivArea(point) {
       if (
@@ -206,8 +228,7 @@ export default {
 };
 </script>
 <style scoped>
-.asynClass{
+.asynClass {
   border: 2px solid orangered !important;
-
 }
 </style>
