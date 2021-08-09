@@ -65,7 +65,7 @@ export default {
       this.canvas.addEventListener(
         "mousewheel",
         evt => {
-          console.log('this.seletedId?',this.seletedId);
+          // console.log('this.seletedId?',this.seletedId);
           this.getPosition(evt);
           this.broadCast("handleScroll", evt);
           //鼠标滚动触发
