@@ -9,7 +9,6 @@
 </template>
 <script>
 import imageCanvas from "./canvas.vue";
-import { throttle } from "throttle-debounce";
 import { createNamespacedHelpers } from "vuex";
 const { mapGetters, mapActions } = createNamespacedHelpers("imgList");
 export default {
@@ -20,27 +19,11 @@ export default {
     };
   },
   mounted() {
-    // this.$bus.$on("image_broadcast", this.handleBroadcast);
-    // this.$bus.$on("image_handleSelect", this.handleSelect);
   },
   computed: {
     ...mapGetters(["imageList"])
   },
   methods: {
-    // handleSelect(id) {
-    //   this.seletedId = id;
-    // },
-    // handleBroadcast(data) {
-    //   const { name, evt } = data;
-    //     this.imageList.forEach(item => {
-    //       let canvas = this.$refs[item.src][0];
-    //       if (item.src !== evt.id) {
-    //         if (!this.seletedId||!canvas.syn) {
-    //           canvas[name](evt);
-    //         }
-    //       }
-    //     });
-    // }
   },
   components: { imageCanvas }
 };
