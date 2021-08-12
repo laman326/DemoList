@@ -2,7 +2,7 @@
   <div>
     <div class="canvasItems">
       <span v-for="imgs in imageList" :key="imgs.index" class="dragItem">
-        <image-canvas :imgSrc="imgs.src" :ref="imgs.src"></image-canvas>
+        <image-canvas :imgSrc="imgs.src" ></image-canvas>
       </span>
     </div>
   </div>

@@ -128,12 +128,12 @@ export default {
       }
     },
     handleBroadcast({ name, evt }) {
-      if ((this.syn || evt.id === this.id) && !this.selectedId) {
-        this[name](evt);
-      } else if (this.selectedId === this.id && !this.syn) {
-        this[name](evt);
-      } else if (this.id === evt.id) {
-        this[name](evt);
+      if(this.selectedId){
+        if(this.selectedId===this.id||evt.id===this.id){
+           this[name](evt);
+        }
+      }else{
+        this[name](evt)
       }
     },
     //鼠标按下事件
