@@ -16,7 +16,7 @@ import broadCast from "../components/broadCastDemo/broadCast.vue"
 import rotateWithBitMap from "../components/canvasRotate/rotateWithBitMap.vue"
 import testOffsrceern from "../components/canvasRotate/canvasExample.vue";
 import cutImageToDrawCanvas from "../components/canvasRotate/cutImageToDrawCanvas.vue"
-
+import GifDemo from "../components/gifDemo/gif.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -98,6 +98,11 @@ export default new Router({
       path: "/cutImageToDrawCanvas",
       name: "cutImageToDrawCanvas",
       component: cutImageToDrawCanvas
+    },
+    {
+      path: "/GifDemo",
+      name: "GifDemo",
+      component: GifDemo
     }
   ]
 });

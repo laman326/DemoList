@@ -13,6 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@dhdbstjr98/gif.js": "^1.0.2",
     "axios": "^0.21.1",
     "element": "^0.1.4",
     "element-ui": "^2.15.2",

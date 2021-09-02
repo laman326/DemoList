@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="LF" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title></title>
+  </head>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="400"
+      height="300"
+      style="border: 1px solid #d3d3d3"
+    >
+    </canvas>
+
+    <script type="text/javascript" src="./gif.js"></script>
+    <script type="text/javascript" src="./gif.worker.js"></script>
+    <script>
+      window.onload = function() {
+        const canvas = document.getElementById("myCanvas");
+        const image1 = new Image();
+        image1.src = "../../../static/plant2.png";
+        const image2 = new Image();
+        image2.src = "../../../static/plant.jpg";
+        var gif = new GIF({
+          workers: 2,
+          quality: 10
+        });
+        gif.addFrame(image1);
+        gif.addFrame(image2);
+        gif.on("finished", function(blob) {
+           const a = document.createElement("a");
+          a.innerText='下载gif'
+          // container.append(a)
+
+          a.href = URL.createObjectURL(blob);
+          a.download = "canvas-image.gif";
+          a.click();
+          // window.open(URL.createObjectURL(blob));
+        });
+        gif.render();
+      };
+    </script>
+  </body>
+</html>

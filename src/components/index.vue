@@ -17,6 +17,7 @@
       >离屏旋转并裁剪</el-button
     >
     <el-button type="text" @click="goToOffsrceern">离屏绘图</el-button>
+    <el-button type="text" @click="goToGIF">gif</el-button>
   </div>
 </template>
 <script>
@@ -65,6 +66,9 @@ export default {
     },
     goToCutImageToDrawCanvas(){
        this.$router.push("/cutImageToDrawCanvas");
+    },
+    goToGIF(){
+       this.$router.push("/GifDemo");
     }
   },
   components: {}
