@@ -8,17 +8,31 @@ import router from './router'
 import{Button} from 'element-ui'
 import axios from 'axios'
 import store from '../src/store/index'
+import draggable from "vuedraggable";
+// Vue.use(draggable)
 
 
 // import Vuex from 'vuex'
 // Vue.use(Vuex)
+import VueAwesomeSwiper from "vue-awesome-swiper";
+Vue.use(VueAwesomeSwiper);
+import "swiper/dist/css/swiper.css";
+// import "swiper/swiper-bundle.css";
+
+var Bus=new Vue();
 
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(Button);
 Vue.prototype.$ajax = axios;
-
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get: function() {
+      return Bus;
+    }
+  },
+});
 
 /* eslint-disable no-new */
 new Vue({
@@ -26,6 +40,6 @@ new Vue({
   render: h => h(App),
   router,
   store,
-  components: { App },
+  components: { App ,draggable},
   template: '<App/>'
 })
